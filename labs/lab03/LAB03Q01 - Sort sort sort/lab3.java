@@ -14,27 +14,30 @@ class lab3{
 		lista[j] = aux;
 	}
 
-	private static void recSelecao(int i, int j){
+	private static void recSelecao(int i, int j, int menor){
 		// CONDICOES
 		if (i < tamanho - 1){
 			if (j < tamanho){
 				// Ordenar em relação a mod M
-				if (lista[j]%m < lista[i]%m){swap(i, j);} 
-				else if (lista[j]%m == lista[i]%m){
+				if (lista[j]%m < lista[menor]%m){menor = j;} 
+				else if (lista[j]%m == lista[menor]%m){
 				// Entre impar e par de mod iguais, precede o impar
-					if (lista[j]%2 > lista[i]%2){swap(i,j);}
+					if (lista[j]%2 > lista[menor]%2){menor = j;}
 					// Entre 2 impares, precede o maior
-					else if (lista[j] > lista[i] && lista[j]%2 == 1){swap(i,j);}
+					else if (lista[j] > lista[menor] && lista[j]%2 == 1){menor = j;}
 					// Entre 2 pares, precede o menor
-					else if (lista[j] < lista[i] && lista[i]%2 == 0){swap(i,j);} 	
+					else if (lista[j] < lista[menor] && lista[menor]%2 == 0){menor = j;} 	
 				}
-				recSelecao(i, ++j);
+				recSelecao(i, ++j, menor);
 			}
-			else {recSelecao(i+1, i+2);}	
+			else {	
+				swap(i,menor);
+				recSelecao(i+1, i+2, i+1);
+			}	
 		}
 	}
 	
-	public static void selecao(){recSelecao(0, 1);}
+	public static void selecao(){recSelecao(0, 1, 0);}
 	
 	
 	public static void main(String args[]){
