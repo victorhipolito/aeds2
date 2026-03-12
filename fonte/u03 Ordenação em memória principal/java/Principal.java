@@ -25,8 +25,8 @@ class Principal {
 
 
       //Geracao do conjunto a ser ordenado
-		//algoritmo.aleatorio();
-		algoritmo.crescente();
+		algoritmo.aleatorio();
+		//algoritmo.crescente();
 		//algoritmo.decrescente();
 
 
