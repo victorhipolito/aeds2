@@ -10,15 +10,17 @@ class Cesar{
 		int tam = original.length();
 		String criptografado;
 		char[] manip = new char[tam];
-		
+		char carac;
 		
 		//loop de inserção em manip
 		for(int i = 0; i < tam; i++){
 			//int val=0;
 			//if (original.charAt(i) >= 'a'){val = 97;}
 			//else {val = 65;}
-			manip[i] = (char)((original.charAt(i)+chave)%127);
-		}	
+			if (original.charAt(i) >= ' ' && original.charAt(i) <= '~'){carac = (char)((original.charAt(i)+chave)%127);}
+			else {carac = original.charAt(i);}
+				manip[i] = carac;
+		}
 		criptografado = new String(manip);
 	
 		return criptografado;
