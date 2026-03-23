@@ -2,7 +2,7 @@ import java.util.Scanner;
 import java.util.Random;
 import java.lang.Math;
 
-class Aleatoria {
+class Altrand {
 	
 	public static String alteracao(String original, char charorig, char charfinal){
 		int tam = original.length();

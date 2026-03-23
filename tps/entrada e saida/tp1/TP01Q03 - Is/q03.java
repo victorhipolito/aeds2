@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-class Checagem {
+class q03 {
 	
 	public static boolean ehVogal(String texto){
 		// Declaracao de Variaveis
