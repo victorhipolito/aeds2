@@ -1,32 +1,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int tamString(char * string){
+// Minha implementação de strlen
+int tamString(char* string){
 	int tamanho = 0;
-	for (int i = 0; i < sizeof(string); i++){
-		(string[i] == '\0') ? i = sizeof(string) : tamanho++;
-	}
+	while(string[tamanho] != '\0') tamanho++;
 	return tamanho;
 }
 
-char* inversao(char* original){
+// Minha implementação da função swap
+void swap(char* text, int i, int j){
+	int aux = text[i];
+	text[i] = text[j];
+	text[j] = aux;
+}
+
+// Função que inverte os valores do vetor char original
+void inversao(char* original){
 	int t = tamString(original);
-	char* invertido = (char*)malloc((t)*sizeof(char));
-	for (int i = 1; i <= t; i++){invertido[i-1] = original[t-i];}
-	invertido[t] = '\0';
-	
-	return invertido;
+	// Loop de troca do i com o ultimo-i
+	for (int i = 0; i < t/2; i++) swap(original, i, t-i-1);
 }
 
 int main(){
+	// Declaracao de var
 	char * original = (char*)malloc(200*sizeof(char));
-	char * invertido;
-	while(scanf(" %s", original) != EOF){
-		
-		invertido = inversao(original);
-		printf("%s\n", invertido);
-		
-		free(invertido);
+	scanf(" %s", original);
+	// Loop de execução
+	while(original[0] != 'F' || original[1] != 'I' || original[2] != 'M' || original[3] != '\0'){
+		inversao(original);
+		printf("%s\n", original);
+		scanf(" %s", original);	
 	}
 	
 	free(original);

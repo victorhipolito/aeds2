@@ -14,26 +14,27 @@ class Cesar{
 		
 		//loop de inserção em manip
 		for(int i = 0; i < tam; i++){
-			//int val=0;
-			//if (original.charAt(i) >= 'a'){val = 97;}
-			//else {val = 65;}
+			// Condição que exclui caracteres especiais da manipulação mas ainda os adiciona
 			if (original.charAt(i) >= ' ' && original.charAt(i) <= '~'){carac = (char)((original.charAt(i)+chave)%127);}
 			else {carac = original.charAt(i);}
 				manip[i] = carac;
 		}
+		// Conversão de char[] para String em criptografado
 		criptografado = new String(manip);
 	
 		return criptografado;
 	}			
-
+	
+	// Programa principal
 	public static void main(String args[]){
 		Scanner sc = new Scanner(System.in);
 		setChave(3);
+		// Loop de inserção
 		String original = sc.nextLine();
 		while (!(original.equals("FIM"))){
 			System.out.println(cifra(original));
 			original = sc.nextLine();
 		}
-		
+		sc.close();
 	}
 }
