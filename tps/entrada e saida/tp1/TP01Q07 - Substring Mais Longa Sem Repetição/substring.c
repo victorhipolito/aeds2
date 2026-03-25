@@ -9,32 +9,42 @@ int tamString(char* texto){
 	return tam;
 }
 
-// Estratégia: Criar um array de 1 a 26 representando cada letra; Caso qualquer letra seja maior que 1, soma os valores e reseta a array;
+//Checar igual -> checa para uma dada string se há valores iguais
+bool checarigual(char* texto, int i, int tam){
+	bool temIgual = false;
+	// Baseado no algoritmo de inserção -> i=0:n-1, j=i+1:n;
+	int j;
+	while (i < tam-1 && !(temIgual)){
+		j = i+1;
+		while(j < tam && !(temIgual)){
+			if (texto[i] == texto[j]) temIgual = true;
+			j++;
+		}
+		i++;
+	}
+	return temIgual;
+}
+
+
+// Estrategia: começar com a string completa e ir reduzindo o tamanho da string pouco a pouco
 int maislonga(char* texto){
 	// Declaracao de variaveis.
-	int maior = 0;
-	int tamsub = 0;
-	int letras[26];
-	int num;	
-	for (int l = 0; l < 26; l++) letras[l]=0; 
+	int tam = tamString(texto);
+	int maior=1;
+	int sub = tam;
+	int i, fim;
 	// Loop de checagem
-	for (int i = 0; i < tamString(texto); i++){
-		int n = texto[i] - 97;
-		// Incrementa uma letra e um no tamanho da substring caso a letra seja nova
-		if (letras[n] != 1){
-			letras[n] = 1;
-			tamsub++;
+	while(sub > 1 && maior == 1){
+		i = 0;
+		fim = sub;
+		while(fim <= tam){
+			if (!(checarigual(texto, i, fim))) maior = sub;
+			i++;
+			fim++;
 		}
-		// Checa se a substring é a maior, reseta tamsub e reseta os valores que checam as letras
-		else{
-			if (tamsub > maior) maior = tamsub;
-			tamsub = 1;
-			for (int l = 0; l < 26; l++) letras[l] = 0;
-			i--;
-		}
-		if(tamsub > maior) maior = tamsub;
+		sub--;
 	}
-
+	
 	return maior;
 }
 
