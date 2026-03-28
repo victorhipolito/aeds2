@@ -25,12 +25,13 @@ void inversao(char* original){
 int main(){
 	// Declaracao de var
 	char * original = (char*)malloc(200*sizeof(char));
-	scanf(" %s", original);
+	scanf(" %[^\n]", original);
 	// Loop de execução
 	while(original[0] != 'F' || original[1] != 'I' || original[2] != 'M' || original[3] != '\0'){
 		inversao(original);
-		printf("%s\n", original);
-		scanf(" %s", original);	
+		for(int i = 0; i < tamString(original); i++) printf("%c", original[i]);
+		printf("\n");
+		scanf(" %[^\n]", original);	
 	}
 	
 	free(original);
