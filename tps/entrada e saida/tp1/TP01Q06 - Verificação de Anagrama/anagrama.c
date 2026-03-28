@@ -52,7 +52,7 @@ int main(){
 	int i, tam1, tam2;
 	
 	// Leitura de entrada - %*s descarta o - lido
-	scanf(" %s%*s%s", anagrama, amagrana);
+	scanf(" %s%s", anagrama, amagrana);
 	
 	//Loop de execução
 	while(anagrama[0] != 'F' || anagrama[1] != 'I' || anagrama[2] != 'M'){
@@ -70,9 +70,9 @@ int main(){
 			i++;
 		}
 		// Ternário de print
-		(isanagrama) ? printf("SIM\n") : printf("NÃO\n");
+		(isanagrama) ? printf("SIM\n") : printf("NAO\n");
 		// Próxima leitura
-		scanf(" %s%*s%s", anagrama, amagrana);
+		scanf(" %s%s", anagrama, amagrana);
 	}	
 	free(anagrama); free(amagrana);
 }
