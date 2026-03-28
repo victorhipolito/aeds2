@@ -12,8 +12,11 @@ int main(){
 	int valor;
 	
 	// Loop de execução
+	int i = 0;
 	while (scanf("%d", &valor) == 1){
-		printf("%d\n", somaDigitos(valor));
+		if (i != 0) printf("\n");
+		printf("%d", somaDigitos(valor));
+		i++;
 	}	
 	
 	return 0;
