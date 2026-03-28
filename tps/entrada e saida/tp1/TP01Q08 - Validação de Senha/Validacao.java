@@ -20,10 +20,11 @@ class Validacao{
 		Scanner sc = new Scanner(System.in);
 		boolean temNum, temLower, temUpper, temEspecial;
 		char c;
-		int tam;
+		int tam=-1;
 		senha = sc.nextLine();
 		// Loop de execução
 		while (!(senha.equals("FIM"))){
+			if (tam != -1) System.out.println();
 			tam = senha.length();
 			// Variáveis vão definir se é ou não uma senha válida no fim
 			temNum = temLower = temUpper = temEspecial = false;
@@ -38,8 +39,8 @@ class Validacao{
 				}
 			}
 			// Comparação final
-			if (temNum && temLower && temUpper && temEspecial) System.out.println("SIM");
-			else System.out.println("NAO");
+			if (temNum && temLower && temUpper && temEspecial) System.out.print("SIM");
+			else System.out.print("NAO");
 			senha = sc.nextLine();
 		}
 		sc.close();
