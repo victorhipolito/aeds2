@@ -18,7 +18,8 @@ void cesarrec(char* texto, int chave, int i){
 int main(){
 	char* texto = (char*)malloc(100*sizeof(texto));	
 	scanf(" %[^\n]", texto);
-	while(texto[0] != 'F' || texto[1] != 'I' || texto[2] != 'M'){
+	int n = 0;
+	while(texto[0] != 'F' || texto[1] != 'I' || texto[2] != 'M'){	
 		cesarrec(texto, 3, 0);
 		for(int i = 0; i < tamRecursivo(texto, 0); i++) printf("%c", texto[i]);
 		printf("\n");
