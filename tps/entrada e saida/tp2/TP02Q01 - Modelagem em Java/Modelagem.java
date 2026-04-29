@@ -1,17 +1,16 @@
 import java.util.Scanner;
 import java.io.File;
+import java.util.Locale;
 
 // Classe manipulação guardara funções de manipulação de valores comuns de duas ou mais classes do projeto.
 class Manipulacao{
 	// Converte uma parte dada de uma string para valor numérico, já que o projeto não permite o split() 
 	public static int converterParte(String s, int i, int f){
-		int casa = 1;
-		int conv = 0;
-		for (int j = f; j >= i; j++){
-			conv += (s.charAt(i)-'0')*casa;
-			casa *= 10;
-		}
-		return conv;
+		int resp = 0;
+		String conv = "";
+		for (int j = i; j <= f; j++){conv += s.charAt(j);}
+		resp = Integer.parseInt(conv);
+		return resp;
 	}
 
 	// Conta a quantidade de vezes que um caracter aparece numa string
@@ -24,25 +23,30 @@ class Manipulacao{
 
 class Data{
 	// Atributos de Data
-	private static int ano;
-	private static int mes;
-	private static int dia;
+	private int ano;
+	private int mes;
+	private int dia;
 	
 	// Set dos atributos de data
-	public static void setAno(int a){ano = a;}
-	public static void setMes(int m){
+	public void setAno(int a){ano = a;}
+	public void setMes(int m){
 		if (m > 0 && m < 13) mes = m;
 		else mes = 0;
 	}
-	public static void setDia(int d){
+	public void setDia(int d){
 		// Meses com 31 dias
 		if (d > 0 && d < 32 && (mes == 1 || mes == 3 || mes == 5 || mes == 7 || mes == 8 || mes == 10 || mes == 12)) dia = d;
 		// Meses com 30 dias
 		else if (d > 0 && d < 31 && (mes == 4 || mes == 6 || mes == 9 || mes == 11)) dia = d;
 		// Fevereiro
-		else if (mes == 2 && d > 0 && (d > 29 || (d > 30 && ano%4 == 0))) dia = d;
+		else if (mes == 2 && d > 0 && (d < 29 || (d < 30 && ano%4 == 0))) dia = d;
 		else dia = 0;
 	}
+
+	public int getAno(){return ano;}
+	public int getMes(){return mes;}
+	public int getDia(){return dia;}
+
 	//Construtor vazio (não será utilizado)
 	public Data(){
 		dia = 0;
@@ -66,20 +70,20 @@ class Data{
 		return new Data(data[0], data[1], data[2]);
 	}
 	// Retorna a String formatada
-	public static String formatar(){
-		return String.format("%02d/%02d/%04d", dia, mes, ano);
+	public String formatar(){
+		return String.format("%02d/%02d/%04d", getDia(), getMes(), getAno());
 	}
 }
 
 class Hora{
-	private static int hora;
-	private static int minuto;
+	private int hora;
+	private int minuto;
 	//Sets de hora - 99 será para a identificação de erro no código
-	public static void setHora(int h){
+	public void setHora(int h){
 		if (0 <= h && h < 24) hora = h;
 		else hora = 99;
 	}
-	public static void setMinuto(int m){
+	public void setMinuto(int m){
 		if (0 <= m && m < 60) minuto = m;
 		else minuto = 99;
 	}
@@ -109,30 +113,37 @@ class Hora{
 }
 
 class Restaurante{
-	private static int id;
-	private static String nome;
-	private static String cidade;
-	private static int capacidade;
-	private static double avaliacao;
-	private static String[] tipos_cozinha;
-	private static int faixa_preco;
-	private static Hora horario_abertura;
-	private static Hora horario_fechamento;
-	private static Data data_abertura;
-	private static boolean aberto;
+	private int id;
+	private String nome;
+	private String cidade;
+	private int capacidade;
+	private double avaliacao;
+	private String[] tipos_cozinha;
+	private int faixa_preco;
+	private Hora horario_abertura;
+	private Hora horario_fechamento;
+	private Data data_abertura;
+	private boolean aberto;
 	
 	public int getId(){return id;}	
-	private String getNome(){return nome;}
-	private String getCidade(){return cidade;}
-	private int getCapacidade(){return capacidade;}
-	private double getAval(){return avaliacao;}
-	private String[] getTC(){return tipos_cozinha;}
-	private int getFP(){return faixa_preco;}
-	private Hora getHA(){return horario_abertura;}
-	private Hora getHF(){return horario_fechamento;}
-	private Data getDA(){return data_abertura;}
-	private boolean getAberto(){return aberto;}
+	public String getNome(){return nome;}
+	public String getCidade(){return cidade;}
+	public int getCapacidade(){return capacidade;}
+	public double getAval(){return avaliacao;}
+	public String[] getTC(){return tipos_cozinha;}
+	public int getFP(){return faixa_preco;}
+	public Hora getHA(){return horario_abertura;}
+	public Hora getHF(){return horario_fechamento;}
+	public Data getDA(){return data_abertura;}
+	public boolean getAberto(){return aberto;}
 
+	public Restaurante(){
+		id = -1;
+		nome = "";
+		cidade = "";
+		capacidade = -1;
+		avaliacao = -1;
+	}
 
 	private Restaurante(int i, String n, String cid, int cap, double aval, String[] t_c, int f_p, Hora h_a, Hora h_f, Data d_a, boolean a){
 		id = i;
@@ -153,9 +164,9 @@ class Restaurante{
 	public static String[] parseTipos(String s){
 		// Recebe a quantidade de tipos de cozinha que há e inicializa com base nisso a array tipos_cozinha
 		int qtTipos = Manipulacao.countChar(';', s);
-		String[] tp = new String[qtTipos];
+		String[] tp = new String[++qtTipos];
 		int loc = 0;
-		for (int i = 0; i < qtTipos; i++) tp[i] = new String();
+		for (int i = 0; i < qtTipos; i++) tp[i] = "";
 		for(int i = 0; i < s.length(); i++){
 			if (s.charAt(i) == ';'){
 				loc++;
@@ -172,42 +183,49 @@ class Restaurante{
 		sc.useDelimiter(",");
 		String tmp;
 		// id
-		id = sc.nextInt();
+		int Nid = sc.nextInt();
 		// nome
-		nome = sc.next();
+		String Nnome = sc.next();
 		// cidade
-		cidade = sc.next();
+		String Ncid = sc.next();
 		// capacidade
-		capacidade = sc.nextInt();
+		int Ncap = sc.nextInt();
 		// avaliacao
 		tmp = sc.next();
-		avaliacao = Double.parseDouble(tmp);
+		double Naval = Double.parseDouble(tmp);
 		// tipos_cozinha
 		tmp = sc.next();
-		tipos_cozinha = parseTipos(tmp);
+		String[] Ntc = parseTipos(tmp);
 		// faixa_preço
 		tmp = sc.next();
-		faixa_preco = tmp.length();	
-		// horario_abertura
+		int Nfp = tmp.length();	
+		// horario_abertura e horario_fechamento
 		tmp = sc.next();
-		horario_abertura = Hora.parseHora(tmp);
-		// horario_fechamento
-		tmp = sc.next();
-		horario_fechamento = Hora.parseHora(tmp);
+		Scanner horas = new Scanner(tmp);
+		horas.useDelimiter("-");
+		String h;
+		h = horas.next();
+		Hora Nha = new Hora();
+		Nha = Nha.parseHora(h);
+		h = horas.next();
+		Hora Nhf = new Hora();
+		Nhf = Nhf.parseHora(h);
+		horas.close();
 		// data_abertura
 		tmp = sc.next();
-		data_abertura = Data.parseData(tmp);
+		Data Nda = new Data();
+		Nda = Nda.parseData(tmp);
 		// aberto
 		tmp = sc.next();
-		aberto = (tmp.charAt(0) == 't');
+		boolean Nab = (tmp.charAt(0) == 't');
 		sc.close();
-		return new Restaurante(id, nome, cidade, capacidade, avaliacao, tipos_cozinha, faixa_preco, horario_abertura, horario_fechamento, data_abertura, aberto);
+		return new Restaurante(Nid, Nnome, Ncid, Ncap, Naval, Ntc, Nfp, Nha, Nhf, Nda, Nab);
 	}
 
-	public static String formatar(){
+	public String formatar(){
 		String s = new String("[");
 		// Elem. já formatados
-		s += String.format("%d ## %s ## %s ## %.1lf ## [", id, nome, cidade, capacidade, avaliacao);
+		s += String.format(Locale.US,"%d ## %s ## %s ## %d ## %.1f ## [", id, nome, cidade, capacidade, avaliacao);
 		//tipos_cozinha
 		for (int i = 0; i < tipos_cozinha.length; i++){
 			s += tipos_cozinha[i];
@@ -227,11 +245,11 @@ class Restaurante{
 
 class ColecaoRestaurantes{
 	private int tamanho;
-	private static Restaurante[] restaurantes;
+	private Restaurante[] restaurantes;
 
 	public int getTamanho(){return tamanho;}
 	
-	public static Restaurante[] getRestaurantes(){return restaurantes;}
+	public Restaurante[] getRestaurantes(){return restaurantes;}
 	
 	public int findRest(int qual){
 		for (int i = 0; i < getTamanho(); i++){
@@ -242,38 +260,50 @@ class ColecaoRestaurantes{
 	//Path = /tmp/restaurantes.csv
 	public void lerCsv(String path){
 		File arquivo = new File(path);
+		Scanner ler;
+		String temp;
 		int n = 0;
-		try (Scanner ler = new Scanner(arquivo)){
-			while(ler.hasNextLine()){n++; ler.next();}
-			ler.reset();
+		try {
+			ler = new Scanner(arquivo);
+			temp = ler.nextLine();
+			while(ler.hasNextLine()){n++; ler.nextLine();}
+			ler.close();
+			ler = new Scanner(arquivo);
 			tamanho = n;
-			restaurantes = new Restaurante[n];
-			for (int i = 0; i < n; n++){restaurantes[i] = Restaurante.parseRestaurante(ler.nextLine());}
+			restaurantes = new Restaurante[tamanho];
+			temp = ler.nextLine();
+			for (int i = 0; i < tamanho; i++){
+				restaurantes[i] = new Restaurante();
+				temp = ler.nextLine();
+				restaurantes[i] = restaurantes[i].parseRestaurante(temp);
+			}
 			ler.close();
 		}
-		catch (Exception e) {System.out.println("Erro: arquivo não encontrado");}
+		catch (Exception e) {
+			System.out.println("Erro de execução");
+			e.printStackTrace();
+		}
 	}
 
+	public ColecaoRestaurantes() {tamanho=-1;}
 	private ColecaoRestaurantes(String cam){lerCsv(cam);}
-
+	
 	public static ColecaoRestaurantes lerCsv(){return new ColecaoRestaurantes("/tmp/restaurantes.csv");}
 }
 
 class Modelagem{
 
-
-
 	public static void main(String args[]){
 		Scanner sc = new Scanner(System.in);
-		ColecaoRestaurantes col = ColecaoRestaurantes.lerCsv();
-		Restaurante[] rests = ColecaoRestaurantes.getRestaurantes();
-		int r = -2;
-		int pos;
-		while(r != -1){
-			r = sc.nextInt();
-			pos = col.findRest(r);
-			if (pos != -1) System.out.println(rests[pos].formatar());
-			else System.out.println("Erro: Não achou o restaurante");
+		ColecaoRestaurantes col = new ColecaoRestaurantes();
+		col = col.lerCsv();
+		Restaurante[] rests = col.getRestaurantes();
+		int loc;
+		int num = sc.nextInt();
+		while (num != -1){
+			loc = col.findRest(num);
+			System.out.println(rests[loc].formatar());
+			num = sc.nextInt();		
 		}
 		sc.close();	
 	}
