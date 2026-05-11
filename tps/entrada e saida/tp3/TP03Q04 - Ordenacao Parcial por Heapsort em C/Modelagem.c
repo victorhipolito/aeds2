@@ -218,7 +218,7 @@ bool has_filho(int i, int tam){
 //GET MAIOR FILHO - HEAP INVERTIDO
 int get_maior_filho(Rest** r, int i, int tam, int* comparacoes){
 	int filho;
-	int aux = datacmp(&r[2*i]->data_abertura, &r[2*i+ 1])
+	int aux = datacmp(&r[2*i]->data_abertura, &r[2*i+ 1]->data_abertura);
 	*comparacoes += 1;
 	if(2*i == tam || aux > 0) {filho = 2*i;}
 	else if(aux == 0) {
@@ -227,11 +227,27 @@ int get_maior_filho(Rest** r, int i, int tam, int* comparacoes){
 		else {filho = 2*i+ 1;}
 	}
 	else {filho = 2*i+ 1;}
-	return filho
+	return filho;
+}
+
+void reconstruir_heapsort(Rest** r, int tam, int* comparacoes, int* movimentacoes){
+	int i = 1;
+	while (has_filho(i, tam)){
+		int filho = get_maior_filho(r, i, tam, comparacoes);
+		int aux = datacmp(&r[i]->data_abertura, &r[filho]->data_abertura);
+		if(aux < 0 || (aux == 0 && strcmp(r[i]->nome, r[filho]->nome) < 0)){
+				swap(r, i, filho);
+				*movimentacoes += 1;
+				i = filho;
+		}
+		else {i = tam;}
+		*comparacoes += 1;
+	}
 }
 
 
-void heapsort_parcial(Rest** r, int k, int tam, int* comparacoes, int* movimentacoes){
+
+void heapsort_parcial(Rest** r, int k, int n){
 	// Codigo para benchmark
 	FILE *log = fopen("./902693_insercao_parcial.txt", "w+");
 	clock_t ini, fim;
@@ -239,18 +255,26 @@ void heapsort_parcial(Rest** r, int k, int tam, int* comparacoes, int* movimenta
 	int comp = 0;
 	int mov = 0;
 	// Execução por si do programa
-	for (int i = 1; i < tam; i++){
-		tmp = r[i];
-		int j = (i < k) ? i-1 : k-1;
-		while((j >= 0) && (strcmp(r[j]->cidade, tmp->cidade) > 0)){
-			comp++; // Benchmark
-			r[j+1] = r[j];
-			mov++; // Benchmark
-			j--;
+	// Etapa de construcao do heap
+	for(int tam = 2; tam <= k; tam++){
+		construir_heap(r, tam, &comp, &mov);
+	}
+	// Adaptação parcial
+	for (int i = k+1; i <= n; i++){
+		int aux = datacmp(&r[i]->data_abertura, &r[1]->data_abertura);
+		if(aux < 0 || (aux == 0 && strcmp(r[i]->nome, r[1]->nome) < 0)){
+			swap(r, i, 1);
+			mov++;
+			reconstruir_heapsort(r, k, &comp, &mov);
 		}
-		comp++; // Benchmark
-		r[j+1] = tmp;
-		mov++; // Benchmark
+		comp++;
+	}
+	// Etapa de ordenação
+	int tam = k;
+	while (tam > 1){
+		swap(r, 1, tam--);
+		mov++;
+		reconstruir_heapsort(r, tam, &comp, &mov);
 	}
 	// Operações finais e escrita no arquivo de log os valores necessarios.
 	fim = clock();
@@ -275,7 +299,7 @@ int main(){
 		scanf("%d", &i);
 	}
 
-	insercao_parcial(rest, 10, tam);
+	heapsort_parcial(rest, 10, tam);
 
 	for (int j = 0; j < tam; j++){formatar_restaurante(rest[j], buffer); printf("%s\n", buffer);}
 		
